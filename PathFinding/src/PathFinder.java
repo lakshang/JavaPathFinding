@@ -10,12 +10,13 @@ public class PathFinder {
 	public static void main(String[] args) {
 		
 		String[][] lines = null;
+		
 		try {
 		File dir = new File(".");
-		File fin = new File(dir.getCanonicalPath() + File.separator + "input.txt"); // small map
-		//File fin = new File(dir.getCanonicalPath() + File.separator + "large_map.txt"); // large map
+		//File fin = new File(dir.getCanonicalPath() + File.separator + "input.txt"); // small map
+		File fin = new File(dir.getCanonicalPath() + File.separator + "large_map.txt"); // large map
 
-		lines =	readFile2(fin);
+		lines =	readFile(fin);
 		
 		} catch (IOException e) {
 		
@@ -29,15 +30,15 @@ public class PathFinder {
 		StartoGoal(lines);
 	}
 	
-	private static String [][] readFile2(File fin) throws IOException {
+	private static String [][] readFile(File fin) throws IOException {
 		// Construct BufferedReader from FileReader
 		BufferedReader br = new BufferedReader(new FileReader(fin));
 	 
 		String line = null;
 		//String[] line1 = null;
 		String[][] lines = null;
-		lines = new String[5][5]; // small map
-		//lines = new String[50][50]; // large map
+		//lines = new String[5][5]; // small map
+		lines = new String[50][50]; // large map
 		
 		int count = 0;
 		
@@ -116,7 +117,7 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 		Coordinate bottom_tile = new Coordinate(x1+1,y1);*/
 		
 		
-			if (right_tile.getX() < max) {    //checking to see that tile doesnt run out of index
+			if (right_tile.getX() < max && bottom_tile.getY()<max) {    //checking to see that tile doesnt run out of index
 				
 				// check if the neighbour tile on the right is walkable	
 				char tile = lines[right_tile.getY()][right_tile.getX()].charAt(0);		
@@ -242,7 +243,6 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 		return temp;
 	}
 	
-	
 	private static Coordinate goal_index;
 	private static Coordinate start_index;
 	
@@ -254,7 +254,6 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 		
 		return temp;
 	}
-	
 	
 	private static int[] tileScoreArray(int[] cost_of_movement, List<Coordinate> walkable_choices , Coordinate goal_index  ) {
 		
@@ -275,6 +274,7 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 			
 			temp[i] = tile_score;
 			
+			System.out.println("cost of movement :" +cost_of_movement[i] + " tile_distance: "+ tile_distance +" walkable_choices score: "+tile_score+" at index: " +i);
 		}
 		
 		return temp;
@@ -296,6 +296,7 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 			  }
 		  }
 	
+		  System.out.println("best_tile_score " + smallest_score);
 		return smallest_score;
 		
 	}
@@ -325,10 +326,10 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 	private static void StartoGoal(String lines[][]) {
 		
 		int best_tile_score = 0;
-		start_index = new Coordinate(0,0);
-		//start_index = new Coordinate(1,0);
+		//start_index = new Coordinate(0,0);
+		start_index = new Coordinate(0,1);
 		goal_index = new Coordinate(lines.length,lines.length);
-		//goal_index = new Coordinate(5,5);
+		//goal_index = new Coordinate(4,4);
 		cost_so_far = 0;
 		finalRoute  = new ArrayList<Coordinate>();
 		
@@ -349,6 +350,7 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 		
 		//step4
 		best_tile_score = BestTileScore(tile_score_array);
+		
 		Coordinate best_tile_index =BestTileIndex(tile_score_array, walkable_choices);
 		
 		cost_so_far = best_tile_score;
