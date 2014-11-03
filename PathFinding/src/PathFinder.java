@@ -2,16 +2,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
 public class PathFinder {
 
-	
 	public static void main(String[] args) {
 		
 		String[][] lines = null;
@@ -19,11 +14,8 @@ public class PathFinder {
 		File dir = new File(".");
 		File fin = new File(dir.getCanonicalPath() + File.separator + "input.txt"); // small map
 		//File fin = new File(dir.getCanonicalPath() + File.separator + "large_map.txt"); // large map
-		 
+
 		lines =	readFile2(fin);
-		
-		
-		
 		
 		} catch (IOException e) {
 		
@@ -48,23 +40,16 @@ public class PathFinder {
 		//lines = new String[50][50]; // large map
 		
 		int count = 0;
+		
 		while ((line = br.readLine()) != null) {
 		//	System.out.println(line);
 			
-			//line1 = new String[line.length()];
 			for (int i = 0; i<lines.length; i++) {
 				
-				
-				///line1[i] = line.substring(i, i+1);
 				lines[count][i] = line.substring(i, i+1);
-			//	System.out.println(line.substring(i,i+1));
 	
 			}
-			
-			//lines[count] = line1;
-			
-			
-			
+	
 			count++;
 		
 		}
@@ -75,7 +60,6 @@ public class PathFinder {
 			
 			int count2 = 0;
 			while (count2<count1 ) {
-				
 				
 				if (lines[j][count2]!=null) {
 				if (lines[j][count2].equals("l"))
@@ -121,10 +105,6 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 	
 		List<Coordinate> coordinates = new ArrayList<Coordinate>();
 		
-		int[] temp = null;
-		
-		
-		
 		int x1 =start_index.getX();
 		int y1 = start_index.getY();
 		
@@ -162,20 +142,14 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 						
 						coordinates.add(new Coordinate(bottom_tile.getY(),bottom_tile.getX()));
 					}
-				 
-				
 				
 				}
 			
 			return coordinates;
 			
 			}
-		
-//	}
-		
-		
 				
-	private static List<int[]> getWalkableChoices(String[][] lines) {
+	/*private static List<int[]> getWalkableChoices(String[][] lines) {
 		
 		
 		List<int[]> temp2 = new ArrayList<int[]>();
@@ -210,10 +184,10 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 	
 		return temp2;
 		
-	}
+	}*/
 	
 	//step2
-	private static int costSoFar() {
+	/*private static int costSoFar() {
 		int temp = 0;
 		
 		return temp;
@@ -224,7 +198,7 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 		int temp = 0;
 		
 		return temp;
-	}
+	}*/
 	
 	private static int cost_so_far;
 	
@@ -237,36 +211,31 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 		return temp;
 	}
 	
-
-	private static int[] CostOfMovementArray (String lines[][],List walkable_choices, int cost_so_far) {
-		
+	private static int[] CostOfMovementArray (String lines[][],List<Coordinate> walkable_choices, int cost_so_far) {
 		
 		int temp[] = null;
+		int cost_considered = 0;
 		temp = new int[walkable_choices.size()];
 		
-		int cost_considered = 0;
 		for(int i=0; i<walkable_choices.size(); i++) {
 			
 			Coordinate tile = (Coordinate)walkable_choices.get(i);
-			
 			char terrain = lines[tile.getX()][tile.getY()].charAt(0);
-
-				cost_considered = CostofTerrain(terrain);
+		    cost_considered = CostofTerrain(terrain);    
+		    temp[i] =   CostOfMovement(cost_so_far, cost_considered);
 		        
-		     temp[i] =   CostOfMovement(cost_so_far, cost_considered);
-		        
-		        System.out.println("cost of movement "+CostOfMovement(cost_so_far, cost_considered));
+		    System.out.println("cost of movement "+CostOfMovement(cost_so_far, cost_considered));
+		    
 		    }
+		
 		return temp;
+		
 		}
 		
-	
 	//step3
 	private static int distance(int x1, int x2, int y1, int y2) {
 		
-		
 		int temp = 0;
-		
 		//temp = (x1 - x2) + (y1 - y2);
 		temp = Math.abs(x1 - x2) + Math.abs(y1 - y2);
 		
@@ -312,7 +281,6 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 		
 	}
 	
-	
 	//step4
 	
 	private static int BestTileScore( int[] tile_score_array ) {
@@ -331,7 +299,6 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 		return smallest_score;
 		
 	}
-	
 	
 	private static Coordinate BestTileIndex( int[] tile_score_array, List<Coordinate> walkable_choices) {
 		
@@ -365,11 +332,9 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 		cost_so_far = 0;
 		finalRoute  = new ArrayList<Coordinate>();
 		
-		
 		for (int i = 0; i<lines.length; i++) {
 		
-			//step1
-			
+		//step1
 		List<Coordinate> walkable_choices = new ArrayList<Coordinate>();
 		
 		walkable_choices = searchForWalkableChoices(lines, start_index);
@@ -380,23 +345,18 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 	
 		
 		//step3
-		
 		int[] tile_score_array =  tileScoreArray(cost_of_movement_array, walkable_choices, goal_index);
 		
 		//step4
-		 best_tile_score = BestTileScore(tile_score_array);
-		
+		best_tile_score = BestTileScore(tile_score_array);
 		Coordinate best_tile_index =BestTileIndex(tile_score_array, walkable_choices);
 		
 		cost_so_far = best_tile_score;
 		start_index = best_tile_index;
-		
 		finalRoute.add(best_tile_index);
 		
-		
-		
-		
 		}
+		
 		printRoute(finalRoute, lines);
 			
 		
@@ -404,15 +364,13 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 	
 	private static List<Coordinate> finalRoute;
 
-	private static int[][] best_choice_tiles;
+	///private static int[][] best_choice_tiles;
 	
 	private static void printRoute(List<Coordinate> final_route, String lines[][]) {
 		
 		lines[0][0] = "#";
 		
 			for (int i  = 0 ; i < final_route.size() ; i++) {
-				
-				
 				
 				Coordinate tile_index = (Coordinate)final_route.get(i);
 				lines[tile_index.getX()][tile_index.getY()] = "#";
@@ -421,7 +379,7 @@ private static List<Coordinate> searchForWalkableChoices(String[][] lines , Coor
 			System.out.println("");
 			for (int i = 0; i< lines.length; i++) {
 				
-				for (int j=0; j< lines.length; j ++) {
+				for (int j=0; j < lines.length; j ++) {
 					
 					System.out.print(lines[i][j] );
 				}
